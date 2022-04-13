@@ -31,6 +31,7 @@ const express = require('express')
  router.post('/', (req, res) => {
     const {title, contents} = req.body
     const newPost = {title: title, contents: contents}
+    
     if(!title || !contents){
         res.status(400).json({ message: "Please provide title and contents for the post" })
     }else{
@@ -44,7 +45,23 @@ const express = require('express')
     }
  })
 
- router.put('/:id', (req, res) => {})
+ router.put('/:id', (req, res) => {
+    const {title, contents} = req.body
+    const changes = {title: title, contents: contents}
+
+    if(!title || !contents){
+       return res.status(400).json({ message: "Please provide title and contents for the post" })}
+    Post.update(req.params.id, changes)
+        .then(post =>{
+            if(!post)
+            {res.status(404).json({ message: "The post with the specified ID does not exist" })}
+            else{res.status(200).json(post)}
+        })
+        .catch(err =>{
+            res.status(500).json({ message: "The posts information could not be retrieved" })
+        })
+ })
+
  router.delete('/:id ', (req, res) => {})
  router.get('/:id/comments ', (req, res) => {})
  module.exports = router
