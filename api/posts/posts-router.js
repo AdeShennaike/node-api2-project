@@ -28,7 +28,22 @@ const express = require('express')
         })
  })
 
- router.post('/', (req, res) => {})
+ router.post('/', (req, res) => {
+    const {title, contents} = req.body
+    const newPost = {title: title, contents: contents}
+    if(!title || !contents){
+        res.status(400).json({ message: "Please provide title and contents for the post" })
+    }else{
+        Post.insert(newPost)
+            .then(post => {
+                res.status(201).json(post)
+            })
+            .catch(err => {
+                res.status(500).json({ message: "There was an error while saving the post to the database" })
+            })
+    }
+ })
+
  router.put('/:id', (req, res) => {})
  router.delete('/:id ', (req, res) => {})
  router.get('/:id/comments ', (req, res) => {})
