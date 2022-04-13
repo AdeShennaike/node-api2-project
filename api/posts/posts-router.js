@@ -51,7 +51,8 @@ const express = require('express')
 
     if(!title || !contents){
        return res.status(400).json({ message: "Please provide title and contents for the post" })}
-    Post.update(req.params.id, changes)
+    
+       Post.update(req.params.id, changes)
         .then(post =>{
             if(!post)
             {res.status(404).json({ message: "The post with the specified ID does not exist" })}
@@ -62,6 +63,17 @@ const express = require('express')
         })
  })
 
- router.delete('/:id ', (req, res) => {})
+ router.delete('/:id', (req, res) => {
+    Post.remove(req.params.id)
+    .then(post =>{
+        if(!post)
+        {res.status(404).json({ message: "The post with the specified ID does not exist" })}
+        else{res.status(200).json(post)}
+    })
+    .catch(err =>{
+        res.status(500).json({ message: "The post could not be removed" })
+    })
+ })
+
  router.get('/:id/comments ', (req, res) => {})
  module.exports = router
